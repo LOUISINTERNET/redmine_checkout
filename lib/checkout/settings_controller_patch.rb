@@ -27,7 +27,7 @@ module Checkout
                   # change protocols hash to array.
                   value = value.sort{|(ak,av),(bk,bv)|ak<=>bk}.collect{|id,protocol| protocol} if name.start_with? "protocols_"
                 end
-                settings[name.to_sym] = value
+                settings[name.to_s] = value
               end
             end
                         

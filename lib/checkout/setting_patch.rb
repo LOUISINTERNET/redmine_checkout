@@ -26,7 +26,7 @@ module Checkout
           
           src = <<-END_SRC
             def self.checkout_#{name}
-              self.plugin_redmine_checkout[:#{name}] || #{default}
+              self.plugin_redmine_checkout["#{name}"] || #{default}
             end
 
             def self.checkout_#{name}?
@@ -35,7 +35,7 @@ module Checkout
 
             def self.checkout_#{name}=(value)
               setting = Setting.plugin_redmine_checkout
-              setting[:#{name}] = value
+              setting["#{name}"] = value
               Setting.plugin_redmine_checkout = setting
             end
           END_SRC

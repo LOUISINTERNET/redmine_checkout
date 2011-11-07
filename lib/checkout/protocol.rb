@@ -20,23 +20,24 @@ module Checkout
     
     
     def initialize(args={})
+      puts "\n\n\n-------------------------------\n\n\n#{args.inspect}\n\n"
       args = args.dup
       
-      @protocol = args.delete :protocol
-      @command = args.delete :command # optional, if not set the default from the repo is used
+      @protocol = args.delete "protocol"
+      @command = args.delete "command" # optional, if not set the default from the repo is used
       
       # either a fixed url
-      @fixed_url = args.delete :fixed_url
+      @fixed_url = args.delete "fixed_url"
       # or a regex
-      @regex = args.delete :regex
-      @regex_replacement = args.delete :regex_replacement
+      @regex = args.delete "regex"
+      @regex_replacement = args.delete "regex_replacement"
       
-      @access = args.delete :access
+      @access = args.delete "access"
       
       # boolean values
-      @default = args.delete :is_default
-      @append_path = args.delete :append_path
-      @display_login = args.delete :display_login
+      @default = args.delete "is_default"
+      @append_path = args.delete "append_path"
+      @display_login = args.delete "display_login"
       
       # some reference
       @repository = args.delete :repository
@@ -77,8 +78,8 @@ module Checkout
     
     def access_label(user)
       case access_rw(user)
-        when 'read+write': :label_access_read_write
-        when 'read-only': :label_access_read_only
+        when 'read+write' then :label_access_read_write
+        when 'read-only' then :label_access_read_only
       end
     end
   
