@@ -16,10 +16,11 @@ module Checkout
         tags = repository_field_tags_without_checkout(form, repository) || ""
         return tags if repository.class.name == "Repository"
 
-        tags + @controller.send(:render_to_string, :partial => 'projects/settings/repository_checkout', :locals => {:form => form, :repository => repository, :scm => repository.type.demodulize})
+        tags << controller.render_to_string(:partial => 'projects/settings/repository_checkout', :locals => {:form => form, :repository => repository, :scm => repository.type.demodulize}).html_safe
       end
 
       def scm_select_tag_with_javascript(*args)
+        heads_for_wiki_formatter
         content_for :header_tags do
           javascript_include_tag('subform', :plugin => 'redmine_checkout') +
           stylesheet_link_tag('checkout', :plugin => 'redmine_checkout')

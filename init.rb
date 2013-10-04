@@ -1,8 +1,7 @@
 require 'redmine'
 
-require 'dispatcher'
-Dispatcher.to_prepare do
-  # Patches
+
+Rails.configuration.to_prepare do
   require_dependency 'checkout/settings_controller_patch'
 
   require_dependency 'checkout/repositories_helper_patch'
@@ -15,16 +14,18 @@ end
 # Hooks
 require 'checkout/repository_hooks'
 
+# Helpers
+require 'checkout/view_helper'
+
 Redmine::Plugin.register :redmine_checkout do
   name 'Redmine Checkout plugin'
-  url 'http://dev.holgerjust.de/projects/redmine-checkout'
-  author 'Holger Just'
+  url 'https://github.com/hanjos/redmine_checkout'
+  author 'Holger Just et al.'
   author_url 'http://meine-er.de'
   description 'Add links to the actual repository to the repository view.'
-  version '0.5'
+  version '0.6-BETA'
 
-  # required because of the new i18n requirement and changed syntax
-  requires_redmine :version_or_higher => '1.0.5'
+  requires_redmine :version_or_higher => '2.0.3'
 
   settings_defaults = HashWithIndifferentAccess.new({
     'use_zero_clipboard' => '1',
@@ -65,7 +66,7 @@ EOF
     })]
   end
 
-  settings :default => settings_defaults, :partial => 'settings/redmine_checkout'
+  settings :default => settings_defaults, :partial => 'redmine_checkout'
 
   Redmine::WikiFormatting::Macros.register do
     desc <<-EOF
@@ -97,7 +98,7 @@ EOF
       raise "Checkout protocol #{proto} not found" unless proto_obj
 
       cmd = (project.repository.checkout_display_command? && proto_obj.command.present?) ? proto_obj.command.strip + " " : ""
-      cmd + link_to(proto_obj.url, proto_obj.url)
+      (cmd + link_to(proto_obj.url, proto_obj.url)).html_safe
     end
   end
 end

@@ -1,10 +1,13 @@
-var Subform = Class.create({
+var Subform = function(rawHTML, lineIndex, parentElement) { this.init(rawHTML, lineIndex, parentElement); }
+
+// $.extend(Subform.protype, {
+Subform.prototype = {
   lineIndex: 1,
   parentElement: "",
-  initialize: function(rawHTML, lineIndex, parentElement) {
+  init: function(rawHTML, lineIndex, parentElement) {
     this.rawHTML        = rawHTML;
     this.lineIndex      = lineIndex;
-    this.parentElement  = parentElement;
+    this.parentElement  = "#" + parentElement;
   },
   
   parsedHTML: function() {
@@ -12,34 +15,29 @@ var Subform = Class.create({
   },
   
   add: function() {
-    var e = $(this.parentElement);
-    Element.insert(e, { bottom: this.parsedHTML()});
-    Effect.toggle(e.childElements().last(), 'slide', {duration:0.2});
-    recalculate_even_odd(e);
+    $(this.parsedHTML()).appendTo(this.parentElement);
+    $(this.parentElement).children().last().slideToggle();
+    recalculate_even_odd(this.parentElement);
   },
   
   add_after: function(e) {
-    Element.insert(e, { after: this.parsedHTML()});
-    Effect.toggle(e.next(), 'slide', {duration:0.2});
-    recalculate_even_odd($(this.parentElement));
+    $(this.parsedHTML()).insertAfter(e);
+    $(e).next().slideToggle();
+    recalculate_even_odd(this.parentElement);
   },
   
   add_on_top: function() {
-    var e = $(this.parentElement);
-    Element.insert(e, { top: this.parsedHTML()});
-    Effect.toggle(e.childElements().first(), 'slide', {duration:0.2});
-    recalculate_even_odd(e);
+    $(this.parsedHTML()).prependTo(this.parentElement);
+    $(this.parentElement).children().first().slideToggle();
+    recalculate_even_odd(this.parentElement);
   }
-});
+};
 
 function recalculate_even_odd(element) {
-  $A(element.childElements()).inject(
-    0,
-    function(acc, e)
-    {
-      e.removeClassName("even");
-      e.removeClassName("odd");
-      e.addClassName( (acc%2==0) ? "odd" : "even"); return ++acc;
+  $(element).children().each(function(index) {
+      $(this).removeClass("even");
+      $(this).removeClass("odd");
+      $(this).addClass( (index%2==0) ? "odd" : "even");
     }
   )
 }

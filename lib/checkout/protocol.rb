@@ -63,9 +63,9 @@ module Checkout
       @access_rw[user] = case access
       when 'permission'
         case
-        when user.allowed_to?(:commit_access, repository.project) && user.allowed_to?(:browse_repository, repository.project)
+        when user.allowed_to?(:commit_access, repository.project) && user.allowed_to?(:browse_repository, repository.project) then
           'read+write'
-        when user.allowed_to?(:browse_repository, repository.project)
+        when user.allowed_to?(:browse_repository, repository.project) then
           'read-only'
         else
           nil
