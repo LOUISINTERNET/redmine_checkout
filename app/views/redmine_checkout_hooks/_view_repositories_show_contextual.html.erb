@@ -7,7 +7,7 @@
     <ul id="checkout_protocols">
     <% protocols.each do |p| -%>
       <li>
-        <a <%= 'class="selected"' if p == default_protocol %> id="checkout_protocol_<%= p.protocol.to_s.underscore %>" data-permission="<%= p.access_rw(User.current) %>" href="<%= URI.escape p.url(checkout_path) %>"><%=h p.protocol %></a>
+        <a class="<%= (p == default_protocol) ? 'selected' : '' %>" id="checkout_protocol_<%= p.protocol.to_s.underscore %>" data-permission="<%= p.access_rw(User.current) %>" href="<%= URI.escape p.url(checkout_path) %>"><%=h p.protocol %></a>
       </li>
     <% end -%>
     </ul>
@@ -18,16 +18,16 @@
     </div>
     <% end -%>
     <% if default_protocol -%>
-      <p><%=l :label_access_type, :type => "<span id=\"checkout_access\">#{l(default_protocol.access_label(User.current))}</span>" %></p>
+      <p><%= raw l :label_access_type, :type => raw("<span id=\"checkout_access\">#{l(default_protocol.access_label(User.current))}</span>") %></p>
     <%- end -%>
-    
-    <% javascript_tag do -%>
-      var checkout_access   = $H({<%= protocols.inject([]){|r,p| r << "'checkout_protocol_#{p.protocol.to_s.underscore}': '#{l(p.access_label(User.current))}'"}.join(', ') %>});
-      var checkout_commands = $H({<%= protocols.inject([]){|r,p| r << "'checkout_protocol_#{p.protocol.to_s.underscore}': '#{escape_javascript(p.full_command(checkout_path))}'"}.join(', ') %>});
-      <%- if Setting.checkout_use_zero_clipboard? %>ZeroClipboard.setMoviePath( '<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_checkout') %>' );<% end %>
+
+    <%= javascript_tag do -%>
+      var checkout_access   = {<%= protocols.inject([]){|r,p| r << "'checkout_protocol_#{p.protocol.to_s.underscore}': '#{l(p.access_label(User.current))}'"}.join(', ').html_safe %>};
+      var checkout_commands = {<%= protocols.inject([]){|r,p| r << "'checkout_protocol_#{p.protocol.to_s.underscore}': '#{escape_javascript(p.full_command(checkout_path))}'"}.join(', ').html_safe %>};
+      <%- if Setting.checkout_use_zero_clipboard? %>ZeroClipboard.setMoviePath( '<%= Checkout::ViewHelper.plugin_asset_link('images/ZeroClipboard.swf', :plugin => 'redmine_checkout') %>' );<% end %>
     <% end %>
   </div>
-  <% end%>
+  <% end %>
 </div>
 <div style="clear: left"></div>
 

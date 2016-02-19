@@ -9,7 +9,8 @@ module Checkout
         alias_method_chain :administration_settings_tabs, :checkout
       end
     end
-  
+
+
     module InstanceMethods
       def administration_settings_tabs_with_checkout
         tabs = administration_settings_tabs_without_checkout

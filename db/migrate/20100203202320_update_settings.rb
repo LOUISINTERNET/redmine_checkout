@@ -1,6 +1,9 @@
 class UpdateSettings < ActiveRecord::Migration
   def self.up
     settings = Setting.plugin_redmine_checkout
+    unless settings.class == Hash
+      settings = {}
+    end
     if settings['checkout_url_type'] == "overwritten"
       settings['checkout_url_type'] = "generated"
     end
