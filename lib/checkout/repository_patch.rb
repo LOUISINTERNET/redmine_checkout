@@ -1,5 +1,6 @@
 require_dependency 'repository'
 require_dependency 'checkout_helper'
+require_dependency 'checkout/protocol'
 
 module Checkout
   module RepositoryPatch
